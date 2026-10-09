@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bunga Spesial Untukmu ❤️</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.com"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 50%, #f48fb1 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        .font-serif-romantic {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* Glassmorphism card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(244, 143, 177, 0.37);
+        }
+
+        /* Floating particles canvas */
+        #canvas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Animated Glowing Flowers */
+        .flower-container {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .flower-container:hover {
+            transform: scale(1.05);
+        }
+
+        /* CSS Flower Elements */
+        .stem {
+            width: 6px;
+            height: 180px;
+            background: linear-gradient(to top, #2e7d32, #81c784);
+            border-radius: 4px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .leaf {
+            position: absolute;
+            width: 40px;
+            height: 20px;
+            background: #4caf50;
+            border-radius: 0px 20px 0px 20px;
+        }
+
+        .leaf-left {
+            top: 60px;
+            left: -35px;
+            transform: rotate(-25deg);
+        }
+
+        .leaf-right {
+            top: 100px;
+            right: -35px;
+            transform: rotate(205deg);
+        }
+
+        .bloom {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 100px;
+        }
+
+        .petal {
+            position: absolute;
+            width: 45px;
+            height: 45px;
+            background: radial-gradient(circle, #ff80ab 0%, #ff4081 100%);
+            border-radius: 50% 50% 0 50%;
+            top: 25px;
+            left: 27px;
+            transform-origin: 100% 100%;
+            box-shadow: 0 0 15px rgba(255, 64, 129, 0.4);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0.9;
+        }
+
+        .center-dot {
+            position: absolute;
+            top: 35px;
+            left: 37px;
+            width: 26px;
+            height: 26px;
+            background: radial-gradient(circle, #fff176, #fbc02d);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(251, 192, 45, 0.8);
+            z-index: 10;
+        }
+
+        /* Flower Petal Rotations */
+        .p1 { transform: rotate(0deg) scale(0.1); }
+        .p2 { transform: rotate(45deg) scale(0.1); }
+        .p3 { transform: rotate(90deg) scale(0.1); }
+        .p4 { transform: rotate(135deg) scale(0.1); }
+        .p5 { transform: rotate(180deg) scale(0.1); }
+        .p6 { transform: rotate(225deg) scale(0.1); }
+        .p7 { transform: rotate(270deg) scale(0.1); }
+        .p8 { transform: rotate(315deg) scale(0.1); }
+
+        /* Bloom State */
+        .bloomed .p1 { transform: rotate(0deg) translate(-20px, -20px) scale(1); }
+        .bloomed .p2 { transform: rotate(45deg) translate(-20px, -20px) scale(1); }
+        .bloomed .p3 { transform: rotate(90deg) translate(-20px, -20px) scale(1); }
+        .bloomed .p4 { transform: rotate(135deg) translate(-20px, -20px) scale(1); }
+        .bloomed .p5 { transform: rotate(180deg) translate(-20px, -20px) scale(1); }
+        .bloomed .p6 { transform: rotate(225deg) translate(-20px, -20px) scale(1); }
+        .bloomed .p7 { transform: rotate(270deg) translate(-20px, -20px) scale(1); }
+        .bloomed .p8 { transform: rotate(315deg) translate(-20px, -20px) scale(1); }
+
+        /* Pulse Animation */
+        @keyframes pulseGlow {
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(255, 64, 129, 0.6)); }
+            50% { filter: drop-shadow(0 0 20px rgba(255, 64, 129, 0.9)); }
+        }
+
+        .bloomed {
+            animation: pulseGlow 3s infinite ease-in-out;
+        }
+
+        /* Envelope / Letter animations */
+        .letter-modal {
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        /* Heart Beat */
+        .heart-beat {
+            animation: beat 1.2s infinite ease-in-out;
+        }
+
+        @keyframes beat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-between min-h-screen relative p-4 sm:p-6">
+
+    <canvas id="canvas-bg"></canvas>
+
+    <!-- Header Section -->
+    <header class="text-center mt-6 z-10">
+        <h1 class="text-4xl sm:text-6xl font-serif-romantic text-pink-700 font-bold tracking-wide drop-shadow-md mb-2">
+            Untuk Kamu yang Teristimewa ❤️
+        </h1>
+        <p class="text-pink-900 text-sm sm:text-base font-light bg-white/40 backdrop-blur-md px-4 py-1.5 rounded-full inline-block shadow-sm">
+            Klik bunga di bawah ini untuk membuatnya bermekaran!
+        </p>
+    </header>
+
+    <!-- Interactive Flowers Garden Container -->
+    <main class="w-full max-w-4xl my-auto py-8 z-10 flex flex-col items-center">
+        
+        <!-- Bouquet Container -->
+        <div class="flex justify-center items-end space-x-4 sm:space-x-12 mb-8 h-64">
+            
+            <!-- Flower 1 (Left) -->
+            <div class="flower-container" onclick="bloomFlower(this, 'Rose')">
+                <div class="bloom">
+                    <div class="petal p1"></div>
+                    <div class="petal p2"></div>
+                    <div class="petal p3"></div>
+                    <div class="petal p4"></div>
+                    <div class="petal p5"></div>
+                    <div class="petal p6"></div>
+                    <div class="petal p7"></div>
+                    <div class="petal p8"></div>
+                    <div class="center-dot"></div>
+                </div>
+                <div class="stem">
+                    <div class="leaf leaf-left"></div>
+                    <div class="leaf leaf-right"></div>
+                </div>
+            </div>
+
+            <!-- Flower 2 (Center - Main) -->
+            <div class="flower-container scale-125 mb-4" onclick="bloomFlower(this, 'Love')">
+                <div class="bloom">
+                    <div class="petal p1" style="background: radial-gradient(circle, #ff80ab, #d500f9);"></div>
+                    <div class="petal p2" style="background: radial-gradient(circle, #ff80ab, #d500f9);"></div>
+                    <div class="petal p3" style="background: radial-gradient(circle, #ff80ab, #d500f9);"></div>
+                    <div class="petal p4" style="background: radial-gradient(circle, #ff80ab, #d500f9);"></div>
+                    <div class="petal p5" style="background: radial-gradient(circle, #ff80ab, #d500f9);"></div>
+                    <div class="petal p6" style="background: radial-gradient(circle, #ff80ab, #d500f9);"></div>
+                    <div class="petal p7" style="background: radial-gradient(circle, #ff80ab, #d500f9);"></div>
+                    <div class="petal p8" style="background: radial-gradient(circle, #ff80ab, #d500f9);"></div>
+                    <div class="center-dot"></div>
+                </div>
+                <div class="stem">
+                    <div class="leaf leaf-left"></div>
+                    <div class="leaf leaf-right"></div>
+                </div>
+            </div>
+
+            <!-- Flower 3 (Right) -->
+            <div class="flower-container" onclick="bloomFlower(this, 'Lily')">
+                <div class="bloom">
+                    <div class="petal p1" style="background: radial-gradient(circle, #ff80ab, #ff1744);"></div>
+                    <div class="petal p2" style="background: radial-gradient(circle, #ff80ab, #ff1744);"></div>
+                    <div class="petal p3" style="background: radial-gradient(circle, #ff80ab, #ff1744);"></div>
+                    <div class="petal p4" style="background: radial-gradient(circle, #ff80ab, #ff1744);"></div>
+                    <div class="petal p5" style="background: radial-gradient(circle, #ff80ab, #ff1744);"></div>
+                    <div class="petal p6" style="background: radial-gradient(circle, #ff80ab, #ff1744);"></div>
+                    <div class="petal p7" style="background: radial-gradient(circle, #ff80ab, #ff1744);"></div>
+                    <div class="petal p8" style="background: radial-gradient(circle, #ff80ab, #ff1744);"></div>
+                    <div class="center-dot"></div>
+                </div>
+                <div class="stem">
+                    <div class="leaf leaf-left"></div>
+                    <div class="leaf leaf-right"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Action Button -->
+        <button onclick="openLetter()" class="group relative inline-flex items-center justify-center px-8 py-3.5 text-lg font-semibold tracking-wide text-white transition-all duration-300 ease-in-out bg-gradient-to-r from-pink-500 to-rose-500 rounded-full shadow-lg hover:shadow-2xl hover:scale-105 active:scale-95 focus:outline-none">
+            <span class="mr-2 heart-beat">💌</span>
+            <span>Buka Surat Cinta</span>
+            <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-pink-500"></span>
+            </span>
+        </button>
+    </main>
+
+    <!-- Love Letter Modal Overlay -->
+    <div id="letterModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div id="letterCard" class="glass-card w-full max-w-lg rounded-3xl p-6 sm:p-8 relative transform scale-95 transition-transform duration-300 text-slate-800">
+            
+            <!-- Close Button -->
+            <button onclick="closeLetter()" class="absolute top-4 right-4 text-pink-700 hover:text-pink-900 bg-white/50 hover:bg-white/80 rounded-full w-8 h-8 flex items-center justify-center transition">
+                ✕
+            </button>
+
+            <!-- Letter Content -->
+            <div class="text-center space-y-4">
+                <div class="text-pink-600 text-4xl mb-2">🌸</div>
+                <h2 class="text-3xl font-serif-romantic font-bold text-pink-700">Hai Sayang,</h2>
+                
+                <div class="text-gray-700 leading-relaxed text-sm sm:text-base text-left space-y-3 font-light max-h-60 overflow-y-auto pr-2">
+                    <p>
+                        Sama seperti bunga-bunga ini yang butuh waktu untuk mekar sempurna, cintaku padamu juga tumbuh makin indah setiap harinya.
+                    </p>
+                    <p>
+                        Terima kasih sudah selalu ada, membawa senyuman, kehangatan, dan kebahagiaan di setiap hariku. Bunga ini mungkin tidak nyata, tapi rasa sayangku padamu sangat tulus dan nyata.
+                    </p>
+                    <p class="font-serif-romantic text-xl text-pink-800 text-center pt-2">
+                        "Setiap hari bersamamu adalah hari favoritku."
+                    </p>
+                </div>
+
+                <!-- Custom Message Box Input (Interactive) -->
+                <div class="pt-2 border-t border-pink-200/60">
+                    <p class="text-xs text-pink-600 mb-2">Kirim balasan pesan manis untukku:</p>
+                    <div class="flex gap-2">
+                        <input type="text" id="replyInput" placeholder="Tulis pesan singkat..." class="w-full text-sm px-3 py-2 rounded-xl border border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white/70">
+                        <button onclick="sendReply()" class="bg-pink-600 text-white text-xs px-4 py-2 rounded-xl hover:bg-pink-700 transition flex items-center shrink-0">
+                            Kirim ❤️
+                        </button>
+                    </div>
+                    <p id="replyStatus" class="text-xs text-green-600 mt-2 hidden">Pesan terkirim! Terima kasih sayang 🥰</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-pink-800/70 z-10 mb-2">
+        Dibuat khusus dengan sepenuh hati ❤️
+    </footer>
+
+    <script>
+        // Auto-bloom flowers on start with slight delay
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const flowers = document.querySelectorAll('.flower-container');
+                flowers.forEach((flower, index) => {
+                    setTimeout(() => {
+                        flower.querySelector('.bloom').classList.add('bloomed');
+                    }, index * 300);
+                });
+            }, 500);
+
+            initPetalsCanvas();
+        });
+
+        // Click event to toggle flower blooming with hearts explosion
+        function bloomFlower(element, type) {
+            const bloom = element.querySelector('.bloom');
+            bloom.classList.toggle('bloomed');
+
+            // Trigger floating heart effect at click location
+            const rect = element.getBoundingClientRect();
+            createHeartExplosion(rect.left + rect.width / 2, rect.top);
+        }
+
+        // Open Letter Modal
+        function openLetter() {
+            const modal = document.getElementById('letterModal');
+            const card = document.getElementById('letterCard');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            card.classList.remove('scale-95');
+            card.classList.add('scale-100');
+        }
+
+        // Close Letter Modal
+        function closeLetter() {
+            const modal = document.getElementById('letterModal');
+            const card = document.getElementById('letterCard');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            card.classList.remove('scale-100');
+            card.classList.add('scale-95');
+        }
+
+        // Reply Simulation
+        function sendReply() {
+            const input = document.getElementById('replyInput');
+            const status = document.getElementById('replyStatus');
+            if (input.value.trim() !== '') {
+                status.classList.remove('hidden');
+                input.value = '';
+                setTimeout(() => {
+                    status.classList.add('hidden');
+                }, 3000);
+            }
+        }
+
+        // Floating Hearts Particle Effect
+        function createHeartExplosion(x, y) {
+            for (let i = 0; i < 8; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '🌸';
+                heart.style.position = 'fixed';
+                heart.style.left = x + 'px';
+                heart.style.top = y + 'px';
+                heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
+                heart.style.pointerEvents = 'none';
+                heart.style.zIndex = '100';
+                heart.style.transition = 'all 1s ease-out';
+                
+                document.body.appendChild(heart);
+
+                const angle = Math.random() * Math.PI * 2;
+                const dist = Math.random() * 80 + 20;
+                const destX = x + Math.cos(angle) * dist;
+                const destY = y + Math.sin(angle) * dist - 50;
+
+                setTimeout(() => {
+                    heart.style.left = destX + 'px';
+                    heart.style.top = destY + 'px';
+                    heart.style.opacity = '0';
+                    heart.style.transform = 'scale(1.5)';
+                }, 10);
+
+                setTimeout(() => {
+                    heart.remove();
+                }, 1000);
+            }
+        }
+
+        // Canvas Floating Petals Background Animation
+        function initPetalsCanvas() {
+            const canvas = document.getElementById('canvas-bg');
+            const ctx = canvas.getContext('2d');
+
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            const particles = [];
+            const particleCount = 35;
+
+            class Petal {
+                constructor() {
+                    this.reset();
+                }
+
+                reset() {
+                    this.x = Math.random() * width;
+                    this.y = -20;
+                    this.size = Math.random() * 8 + 6;
+                    this.speedY = Math.random() * 1.5 + 0.8;
+                    this.speedX = Math.random() * 1 - 0.5;
+                    this.opacity = Math.random() * 0.5 + 0.5;
+                    this.rotation = Math.random() * 360;
+                    this.rotSpeed = (Math.random() - 0.5) * 2;
+                    this.color = Math.random() > 0.5 ? '#ff80ab' : '#ff4081';
+                }
+
+                update() {
+                    this.y += this.speedY;
+                    this.x += Math.sin(this.y / 30) + this.speedX;
+                    this.rotation += this.rotSpeed;
+
+                    if (this.y > height + 20) {
+                        this.reset();
+                    }
+                }
+
+                draw() {
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate((this.rotation * Math.PI) / 180);
+                    ctx.globalAlpha = this.opacity;
+                    ctx.fillStyle = this.color;
+
+                    // Draw Petal Shape
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.quadraticCurveTo(this.size, -this.size, this.size * 2, 0);
+                    ctx.quadraticCurveTo(this.size, this.size, 0, 0);
+                    ctx.fill();
+
+                    ctx.restore();
+                }
+            }
+
+            for (let i = 0; i < particleCount; i++) {
+                const p = new Petal();
+                p.y = Math.random() * height; // initial random spread
+                particles.push(p);
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        }
+    </script>
+</body>
+</html>
